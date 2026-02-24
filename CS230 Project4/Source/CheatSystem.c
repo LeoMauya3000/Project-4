@@ -18,6 +18,7 @@
 #include "level2Scene.h"
 #include "DemoScene.h"
 #include "SandboxScene.h"
+#include "AsteriodScene.h"
 //------------------------------------------------------------------------------
 // Private Constants:
 //------------------------------------------------------------------------------
@@ -45,7 +46,7 @@ typedef struct CheatSystemKeyBinding
 
 static const CheatSystemKeyBinding keyBindings[] =
 {
-	{'1',Level1SceneGetInstance}, { '2',level2SceneGetInstance } ,{ '9',SandBoxSceneGetInstance }, { '0',DemoSceneGetInstance }
+	{'1',Level1SceneGetInstance}, { '2',level2SceneGetInstance } , {'3',AsteriodSceneGetInstance}, { '9',SandBoxSceneGetInstance }, {'0',DemoSceneGetInstance}
 };
 //------------------------------------------------------------------------------
 // Public Variables:
