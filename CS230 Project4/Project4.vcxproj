@@ -173,7 +173,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Animation.c" />
-    <ClCompile Include="Source\AsteroidsScene.c" />
+    <ClCompile Include="Source\AsteriodScene.c" />
     <ClCompile Include="Source\Behavior.c" />
     <ClCompile Include="Source\BehaviorBullet.c" />
     <ClCompile Include="Source\BehaviorSpaceship.c" />
@@ -212,7 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Animation.h" />
-    <ClInclude Include="Source\AsteroidsScene.h" />
+    <ClInclude Include="Source\AsteriodScene.h" />
     <ClInclude Include="Source\Behavior.h" />
     <ClInclude Include="Source\BehaviorBullet.h" />
     <ClInclude Include="Source\BehaviorSpaceship.h" />
