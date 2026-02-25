@@ -10,9 +10,11 @@
 //------------------------------------------------------------------------------
 
 #include "stdafx.h"
-#include "EntityFactory.h"
 #include "Stream.h"
 #include "Entity.h"
+#include "EntityFactory.h"
+#include "EntityContainer.h"	
+
 
 //------------------------------------------------------------------------------
 // Private Constants:
@@ -29,7 +31,7 @@
 //------------------------------------------------------------------------------
 // Private Variables:
 //------------------------------------------------------------------------------
-
+static EntityContainer* archetypes = NULL;
 //------------------------------------------------------------------------------
 // Private Function Declarations:
 //------------------------------------------------------------------------------
@@ -45,22 +47,39 @@ Entity* EntityFactoryBuild(const char* filename)
 	const char* token = NULL;
 
 	if (filename)
-	{
-		streamFile = StreamOpen(filename);
-		
-		if (streamFile)
-		{
-			token = StreamReadToken(streamFile);
+	{	
 
-			if (!strncmp(token, "Entity", _countof("Entity")))
+			if (filename)
 			{
-				entity = EntityCreate();
-				EntityRead(entity, streamFile);
+				return NULL;
+			}
+			if ( archetypes == NULL)
+			{
+				archetypes = EntityContainerCreate();
+			}
+			if (EntityContainerFindByName(archetypes, filename))
+			{
+				Entity* otherEntity = EntityContainerFindByName(archetypes, filename);
+				entity = EntityClone(otherEntity);
+				return entity;
+			}
+			else
+			{
+				char pathName[FILENAME_MAX] = "";
+				sprintf_s(pathName, _countof(pathName), "Data/%s.txt", filename);
+				streamFile = StreamOpen(filename);
+				if (streamFile)
+				{
+					token = StreamReadToken(streamFile);
+					if (!strncmp(token, "Entity", _countof("Entity")))
+					{
+						entity = EntityCreate();
+						EntityRead(entity, streamFile);
+						EntityContainerAddEntity(archetypes, entity);
+					}
+				}
 				StreamClose(&streamFile);
 			}
-			
-
-		}
 	}
 	else
 	{
@@ -71,5 +90,8 @@ Entity* EntityFactoryBuild(const char* filename)
 }
 void EntityFactoryFreeAll()
 {
-	
+	if (archetypes)
+	{
+		EntityContainerFreeAll(archetypes);
+	}
 }

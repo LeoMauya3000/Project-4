@@ -119,27 +119,37 @@ void MeshFree(Mesh** mesh)
 }
 void MeshRead(Mesh* mesh, Stream stream)
 {
-	const char* meshName;
+	Vector2D *position = NULL;
+	DGL_Color* color = NULL;
+	Vector2D* uvOffset = NULL;
 	const char* token = StreamReadToken(stream);
-	while (token)
-	{
 		if (!strncmp(token, "Mesh", _countof("Mesh")))
 		{
-			token = StreamReadToken(stream);
-
+			*mesh->name = *StreamReadToken(stream);
+			int verticies = StreamReadInt(stream);
+			DGL_Graphics_StartMesh();
+			for (int i = 0; i <= verticies; i++)
+			{
+				 StreamReadVector2D(stream, position);
+				 StreamReadColor(stream, color);
+				 StreamReadVector2D(stream, uvOffset);
+				 DGL_Graphics_AddVertex(position, color, uvOffset);
+			}
+			mesh = (Mesh*)DGL_Graphics_EndMesh();
+			mesh->drawMode = DGL_DM_POINTLIST;
 		}
-
-
-	}
-
-
-
-
-
 }
 bool MeshIsNamed(const Mesh* mesh, const char* name)
 {
-
+	if (mesh && name)
+	{
+		if (strcmp(mesh->name, name) == 0)
+		{
+			return true;
+		}
+		return false;
+	}
+	return false;
 }
 
 

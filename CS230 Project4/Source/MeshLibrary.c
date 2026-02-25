@@ -11,6 +11,9 @@
 
 #include "stdafx.h"
 #include "MeshLibrary.h"
+#include "EntityContainer.h"
+#include "Entity.h"
+#include "Mesh.h"
 
 
 //------------------------------------------------------------------------------
@@ -39,10 +42,12 @@ typedef struct MeshLibrary
 //------------------------------------------------------------------------------
 // Private Variables:
 //------------------------------------------------------------------------------
-
+static MeshLibrary meshes;
 //------------------------------------------------------------------------------
 // Private Function Declarations:
 //------------------------------------------------------------------------------
+static void MeshLibraryAdd(const Mesh* mesh);
+static const Mesh* MeshLibraryFind(const char* meshName);
 
 //------------------------------------------------------------------------------
 // Public Functions:
@@ -52,6 +57,11 @@ typedef struct MeshLibrary
 void MeshLibraryInit()
 {
 
+	meshes.meshCount = 0;
+	for (int i = 0; i <= 19; i++)
+	{
+		meshes.meshList[i] = 0;
+	}
 
 }
 
@@ -70,14 +80,39 @@ void MeshLibraryExit()
 }
 const Mesh* MeshLibraryBuild(const char* meshName)
 {
-	Mesh* meshmeshmehshshsh = calloc(1, sizeof(MeshLibrary));
-	meshName;
-	return meshmeshmehshshsh;
+	if (meshName)
+	{
+		if (MeshLibraryFind(meshName))
+		{
+
+		}
+
+
+
+
+
+
+
+    }
 	
 }
 void MeshLibraryFreeAll()
 {
 
+}
+static const Mesh* MeshLibraryFind(const char* meshName)
+{
+	if (meshName)
+	{
+		for (int i = 0; i <= meshes.meshCount; i++)
+		{
+			if (MeshIsNamed(meshes.meshList[i], meshName))
+			{
+				return meshes.meshList[i];
+			}
+		}
+	}
+	return NULL;
 }
 
 //------------------------------------------------------------------------------

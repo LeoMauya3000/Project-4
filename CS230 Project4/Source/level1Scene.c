@@ -189,9 +189,9 @@ static void Level1SceneLoad(void)
 static void Level1SceneInit(void)
 {
 
-	livesTextEntity = EntityFactoryBuild("./Data/MonkeyLivesText.txt");
-	createdEntity = EntityFactoryBuild("./Data/PlanetBounce.txt");
-	monkeyEntity = EntityFactoryBuild("./Data/Monkey.txt");
+	livesTextEntity = EntityFactoryBuild("MonkeyLivesText");
+	createdEntity = EntityFactoryBuild("PlanetBounce");
+	monkeyEntity = EntityFactoryBuild("Monkey");
 	if (createdEntity)
 	{	
 		SpriteSetMesh(EntityGetSprite(createdEntity), createdMesh);

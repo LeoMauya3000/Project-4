@@ -15,6 +15,7 @@
 #include "SceneSystem.h"
 #include "AsteriodScene.h"
 #include "DGL.h"
+#include "EntityFactory.h"
 
 //------------------------------------------------------------------------------
 // Private Constants:
@@ -28,6 +29,7 @@ typedef struct AsteriodScene
 {
 	// WARNING: The base class must always be included first.
 	Scene	base;
+	Entity* spaceShip;
 
 	// Add any scene-specific variables second.
 
@@ -90,6 +92,12 @@ static void AsteriodSceneInit()
 {   
 	DGL_Graphics_SetBackgroundColor(&(DGL_Color){ 0,0,0,0 });
 	DGL_Graphics_SetBlendMode(DGL_BM_BLEND);
+	
+	instance.spaceShip = EntityFactoryBuild("Spaceship");
+	if (instance.spaceShip)
+	{
+		SceneAddEntity(instance.spaceShip);
+	}
 }
 
 // Update the the variables used by the scene.
