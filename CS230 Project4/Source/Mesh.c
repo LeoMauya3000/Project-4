@@ -12,6 +12,7 @@
 #include "stdafx.h"
 #include "Mesh.h"
 #include "DGL.h"
+#include "stream.h"
 
 //------------------------------------------------------------------------------
 // Private Constants:
@@ -115,6 +116,30 @@ void MeshFree(Mesh** mesh)
 	DGL_Graphics_FreeMesh(&((*mesh)->meshResource));
 	free(*mesh);
 	*mesh = NULL;
+}
+void MeshRead(Mesh* mesh, Stream stream)
+{
+	const char* meshName;
+	const char* token = StreamReadToken(stream);
+	while (token)
+	{
+		if (!strncmp(token, "Mesh", _countof("Mesh")))
+		{
+			token = StreamReadToken(stream);
+
+		}
+
+
+	}
+
+
+
+
+
+}
+bool MeshIsNamed(const Mesh* mesh, const char* name)
+{
+
 }
 
 

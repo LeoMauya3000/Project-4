@@ -1,3 +1,22 @@
-﻿  Stream.c
-  Project4.vcxproj -> C:\Users\rockm\source\repos\Project-4\CS230 Project4\x64\Debug\Project4.exe
-  1 File(s) copied
+﻿  EntityContainer.c
+  Level1Scene.c
+  Level2Scene.c
+  Mesh.c
+  Sprite.c
+C:\Users\rockm\source\repos\Project-4\CS230 Project4\Source\Mesh.c(120,21): error C2220: the following warning is treated as an error
+  (compiling source file '/Source/Mesh.c')
+  
+C:\Users\rockm\source\repos\Project-4\CS230 Project4\Source\Mesh.c(120,21): warning C4100: 'mesh': unreferenced parameter
+  (compiling source file '/Source/Mesh.c')
+  
+C:\Users\rockm\source\repos\Project-4\CS230 Project4\Source\Mesh.c(122,14): warning C4101: 'meshName': unreferenced local variable
+  (compiling source file '/Source/Mesh.c')
+  
+C:\Users\rockm\source\repos\Project-4\CS230 Project4\Source\Mesh.c(140,48): warning C4100: 'name': unreferenced parameter
+  (compiling source file '/Source/Mesh.c')
+  
+C:\Users\rockm\source\repos\Project-4\CS230 Project4\Source\Mesh.c(140,30): warning C4100: 'mesh': unreferenced parameter
+  (compiling source file '/Source/Mesh.c')
+  
+  Stream.c
+  Generating Code...
