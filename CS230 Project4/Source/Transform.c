@@ -262,6 +262,24 @@ const Matrix2D* TransformGetMatrix(Transform* transform)
 		return NULL;
 	}
 }
+Transform* TransformClone(const Transform* other)
+{
+	if (other)
+	{
+		Transform* clonedTransform = calloc(1, sizeof(Transform));
+		if (clonedTransform)
+		{
+			clonedTransform->isDirty = other->isDirty;
+			clonedTransform->matrix = other->matrix;
+			clonedTransform->rotation = other->rotation;
+			clonedTransform->scale = other->scale;
+			clonedTransform->translation = other->translation;
+			return clonedTransform;
+		}
+	}
+	return NULL;
+}
+
 
 //------------------------------------------------------------------------------
 // Private Functions:

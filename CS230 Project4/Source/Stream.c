@@ -127,3 +127,16 @@ bool StreamReadBoolean(Stream stream)
 		return false;
 	}
 }
+void StreamReadColor(Stream stream, DGL_Color* color)
+{
+	if (stream && color)
+	{
+		float red = StreamReadFloat(stream);
+		float green = StreamReadFloat(stream);
+		float blue = StreamReadFloat(stream);
+		float alpha = StreamReadFloat(stream);
+		color = &(DGL_Color) { red, green, blue, alpha };
+	}
+
+	color = &(DGL_Color) { 0, 0, 0, 0 };	
+}
