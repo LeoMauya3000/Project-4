@@ -16,6 +16,9 @@
 #include "Stream.h"
 #include "Transform.h"
 #include "Animation.h"
+#include "Behavior.h"
+#include "BehaviorSpaceship.h"
+#include "BehaviorBullet.h"
 
 
 //------------------------------------------------------------------------------
@@ -41,16 +44,23 @@ typedef struct Entity
 	//	 size of the "name" array.]
 	char name[32];
 
-	// Pointer to an attached physics component.
+	// Flag to indicate that the Entity should be destroyed after it has been updated.
+	bool isDestroyed;
+
+	// Pointer to an attached Animation component.
+	Animation* animation;
+
+	// Pointer to an attached Behavior component.
+	Behavior* behavior;
+
+	// Pointer to an attached Physics component.
 	Physics* physics;
 
-	// Pointer to an attached sprite component.
+	// Pointer to an attached Sprite component.
 	Sprite* sprite;
 
-	// Pointer to an attached transform component.
+	// Pointer to an attached Transform component.
 	Transform* transform;
-
-	Animation* animation;
 
 } Entity;
 
@@ -125,6 +135,20 @@ void EntityRead(Entity* entity, Stream stream)
 				AnimationRead(entity->animation, stream);
 				EntityAddAnimation(entity, entity->animation);
 			}
+			else if (!strncmp(token, "BehaviorSpaceship", _countof("BehaviorSpaceship")))
+			{
+
+				entity->behavior = BehaviorSpaceshipCreate();
+				BehaviorRead(entity->behavior, stream);
+				EntityAddBehavior(entity, entity->behavior);
+			}
+			else if (!strncmp(token, "BehaviorBullet", _countof("BehaviorBullet")))
+			{
+
+				entity->behavior = BehaviorBulletCreate();
+				BehaviorRead(entity->behavior, stream);
+				EntityAddBehavior(entity, entity->behavior);
+			}
 			else if (strcmp(token, "") == 0)
 			{
 				return;
@@ -189,15 +213,19 @@ Transform* EntityGetTransform(const Entity* entity)
 void EntityUpdate(Entity* entity, float dt)
 {
 
-	if (entity->physics && entity->transform && entity->sprite)
-	{
-		PhysicsUpdate(entity->physics, entity->transform, dt);
-	}
 	if (entity->animation)
 	{
 		AnimationUpdate(entity->animation, dt);
 	}
+	if (entity->behavior)
+	{
+		BehaviorUpdate(entity->behavior, dt);
+	}
 
+	if (entity->physics && entity->transform && entity->sprite)
+	{
+		PhysicsUpdate(entity->physics, entity->transform, dt);
+	}
 	
 }
 void EntityRender(Entity* entity)
@@ -218,9 +246,6 @@ void EntityAddAnimation(Entity* entity, Animation* animation)
 	}
 }
 
-
-
-
 Animation* EntityGetAnimation(const Entity* entity)
 	{
 	if (entity)
@@ -232,5 +257,70 @@ Animation* EntityGetAnimation(const Entity* entity)
 	{
 		return NULL;
 	}
+}
+
+Entity* EntityClone(const Entity* other)
+{
+	if (other)
+	{
+		Entity* clonedEntity = calloc(1, sizeof(Entity));
+		if (clonedEntity)
+		{
+			EntitySetName(clonedEntity, other->name);
+			EntityAddTransform(clonedEntity, EntityGetTransform(other));
+			EntityAddPhysics(clonedEntity, EntityGetPhysics(other));
+			EntityAddSprite(clonedEntity, EntityGetSprite(other));
+			EntityAddAnimation(clonedEntity, EntityGetAnimation(other));
+			EntityAddBehavior(clonedEntity, EntityGetBehavior(other));
+			return clonedEntity;
+		}
+	}
+	return NULL;
+}
+void EntityDestroy(Entity* entity)
+{
+	if (entity)
+	{
+		entity->isDestroyed = true;
+	}
+}
+bool EntityIsDestroyed(const Entity* entity)
+{
+	if (entity)
+	{
+		if (entity->isDestroyed)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	return false;
+}
+void EntityAddBehavior(Entity* entity, Behavior* behavior)
+{
+	if (entity && behavior)
+	{
+		entity->behavior = behavior;
+	}
+}
+bool EntityIsNamed(const Entity* entity, const char* name)
+{
+	if (strcmp(entity->name, name) == 0)
+	{
+		return true;
+	}
+	return false;
+}
+//absolutely change this 
+Behavior* EntityGetBehavior(const Entity* entity)
+{
+	if (entity)
+	{
+		return entity->behavior;
+	}
+	return NULL;
 }
 

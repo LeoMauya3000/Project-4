@@ -69,4 +69,7 @@ Entity* EntityFactoryBuild(const char* filename)
 	return entity;
 	
 }
-
+void EntityFactoryFreeAll()
+{
+	
+}

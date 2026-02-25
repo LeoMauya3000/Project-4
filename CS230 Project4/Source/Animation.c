@@ -179,8 +179,6 @@ static void AdvanceFrame(Animation* animation)
 
 			if (animation->isLooping)
 			{
-
-				printf("%d", animation->frameIndex);
 				animation->frameIndex = 0;
 				animation->isDone = true;	
 
@@ -212,4 +210,20 @@ static void AdvanceFrame(Animation* animation)
 
 		return;
 	}
+}
+Animation* AnimationClone(const Animation* other)
+{
+	if (other)
+	{
+		Animation* clonedAnimation = calloc(1, sizeof(Animation));
+
+		if (clonedAnimation)
+		{
+		 *clonedAnimation = *other;
+	   	 EntityAddAnimation(clonedAnimation->parent, clonedAnimation);
+		 return clonedAnimation;
+
+		}
+	}
+	return NULL;
 }

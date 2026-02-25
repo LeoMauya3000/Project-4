@@ -12,6 +12,7 @@
 #include "stdafx.h"
 #include "MeshLibrary.h"
 
+
 //------------------------------------------------------------------------------
 // Private Constants:
 //------------------------------------------------------------------------------
@@ -19,7 +20,18 @@
 //------------------------------------------------------------------------------
 // Private Structures:
 //------------------------------------------------------------------------------
+typedef struct MeshLibrary
+{
+	// This variable is not required but could be used for tracking the number
+	//   of Mesh objects currently in the list.
+	unsigned int meshCount;
 
+	// A list of all currently loaded meshes.
+	// This list can be a fixed-length array (minimum size of 10 entries)
+	// or a dynamically-sized array, such as a linked list.
+	const Mesh* meshList[20];
+
+} MeshLibrary;
 //------------------------------------------------------------------------------
 // Public Variables:
 //------------------------------------------------------------------------------
@@ -39,6 +51,8 @@
 // Initialize the ...
 void MeshLibraryInit()
 {
+
+
 }
 
 // Update the ...
@@ -53,6 +67,17 @@ void MeshLibraryUpdate(float dt)
 // Shutdown the ...
 void MeshLibraryExit()
 {
+}
+const Mesh* MeshLibraryBuild(const char* meshName)
+{
+	Mesh* meshmeshmehshshsh = calloc(1, sizeof(MeshLibrary));
+	meshName;
+	return meshmeshmehshshsh;
+	
+}
+void MeshLibraryFreeAll()
+{
+
 }
 
 //------------------------------------------------------------------------------

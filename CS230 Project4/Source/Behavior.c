@@ -11,6 +11,7 @@
 
 #include "stdafx.h"
 #include "Behavior.h"
+#include "Stream.h"
 
 //------------------------------------------------------------------------------
 // Private Constants:
@@ -41,4 +42,73 @@
 //------------------------------------------------------------------------------
 // Private Functions:
 //------------------------------------------------------------------------------
+
+Behavior* BehaviorClone(Behavior* other)
+{
+	if (other)
+	{
+		Behavior* clone = calloc(1, sizeof(Behavior));
+		if (clone)
+		{
+			if (clone)
+			{
+			 clone = other;
+		     return clone;
+			}
+		}
+
+	}
+	return NULL;
+}
+void BehaviorFree(Behavior** behavior)
+{
+	if (behavior)
+	{
+		free(*behavior);
+		behavior = NULL;
+	}
+}
+void BehaviorRead(Behavior* behavior, Stream stream)
+{
+	if (stream && behavior)
+	{
+		int _stateCurr = StreamReadInt(stream);
+		int _stateNext = StreamReadInt(stream);
+		float _timerValue = StreamReadFloat(stream);
+		behavior->stateCurr = _stateCurr;
+		behavior->stateNext = _stateNext;
+		behavior->timer = _timerValue;
+	}
+}
+void BehaviorSetParent(Behavior* behavior, Entity* parent)
+{
+	if (behavior && parent)
+	{
+		behavior->parent = parent;
+	}
+}
+void BehaviorUpdate(Behavior* behavior, float dt)
+{
+	if (behavior)
+	{
+		if (behavior->stateCurr != behavior->stateNext)
+		{
+			if (behavior->onExit)
+			{
+				behavior->stateCurr = behavior->stateNext;
+			}
+
+			behavior->onExit;
+
+		    if (behavior->onInit)
+			{
+				behavior->onInit(behavior);
+			}
+		}
+		if (behavior->onUpdate)
+		{
+			behavior->onUpdate(behavior,dt);
+		}
+	}
+}
 

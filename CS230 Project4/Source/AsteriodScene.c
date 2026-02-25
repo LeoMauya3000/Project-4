@@ -14,6 +14,7 @@
 #include "Scene.h"
 #include "SceneSystem.h"
 #include "AsteriodScene.h"
+#include "DGL.h"
 
 //------------------------------------------------------------------------------
 // Private Constants:
@@ -86,7 +87,9 @@ static void AsteriodSceneLoad(void)
 
 // Initialize the entities and variables used by the scene.
 static void AsteriodSceneInit()
-{
+{   
+	DGL_Graphics_SetBackgroundColor(&(DGL_Color){ 0,0,0,0 });
+	DGL_Graphics_SetBlendMode(DGL_BM_BLEND);
 }
 
 // Update the the variables used by the scene.

@@ -13,7 +13,9 @@
 #include <assert.h>
 #include "Trace.h"	
 #include "Scene.h"
+#include "EntityContainer.h"
 #include "SceneSystem.h"
+#include "EntityFactory.h"
 
 //------------------------------------------------------------------------------
 // Private Constants:
@@ -34,7 +36,7 @@
 //------------------------------------------------------------------------------
 // Private Variables:
 //------------------------------------------------------------------------------
-
+	static EntityContainer* entities = NULL;
 //------------------------------------------------------------------------------
 // Private Function Declarations:
 //------------------------------------------------------------------------------
@@ -55,7 +57,7 @@ bool SceneIsValid(const Scene* scene)
 	{
 		return true;
 	}
-
+	
 	return false;
 }
 
@@ -71,6 +73,7 @@ void SceneLoad(const Scene* scene)
 
 
 		// Execute the Load function.
+		entities = EntityContainerCreate();
 		(*scene->load)();
 	}
 }
@@ -101,6 +104,7 @@ void SceneUpdate(const Scene* scene, float dt)
 
 		// Execute the Update function.
 		(*scene->update)(dt);
+		EntityContainerUpdateAll(entities,dt);
 	}
 }
 
@@ -113,6 +117,8 @@ void SceneRender(const Scene* scene)
 		// TODO: Call TraceMessage, passing the format string "%s: Render" and the name of the scene.
 		TraceMessage("%s: Render", scene->name);
 		// Execute the Render function.
+		EntityContainerRenderAll(entities);
+		//pretty sure im going to have to remove this 
 		(*scene->render)();
 	}
 }
@@ -127,6 +133,8 @@ void SceneExit(const Scene* scene)
 		TraceMessage("%s: Exit", scene->name);
 		// Execute the Exit function.
 		(*scene->exit)();
+		EntityContainerFreeAll(entities);
+		EntityFactoryFreeAll();
 	}
 }
 
@@ -140,6 +148,7 @@ void SceneUnload(const Scene* scene)
 		TraceMessage("%s: Unload", scene->name);
 		// Execute the Unload function.
 		(*scene->unload)();
+		EntityContainerFree(&entities);
 	}
 }
 
@@ -148,6 +157,11 @@ void SceneRestart(void)
 {
 	// Tell the Scene System to restart the active scene.
 	SceneSystemRestart();
+}
+
+void SceneAddEntity(Entity* entity)
+{
+	entity;
 }
 
 //------------------------------------------------------------------------------

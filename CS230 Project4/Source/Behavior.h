@@ -45,7 +45,7 @@ typedef void(*BehaviorFunctionPtrDt)(Behavior* behavior, float dt);
 // pseudo-inheritance in Project 5.
 // NOTE: You are not allowed to change the contents of this structure, as it is
 // part of the public interface.
-typedef struct Behavior
+typedef struct Behavior   
 {
 	// Pointer to the behavior's parent entity.
 	Entity* parent;
@@ -90,7 +90,7 @@ Behavior* BehaviorClone(Behavior* other);
 // (Also, set the behavior pointer to NULL.)
 // Params:
 //	 behavior = Pointer to the Behavior component.
-void BehaviorFree(Behavior* * behavior);
+void BehaviorFree(Behavior** behavior);
 
 // Read the properties of a Behavior component from a file.
 // [NOTE: Read the stateCurr and stateNext values using StreamReadInt.]

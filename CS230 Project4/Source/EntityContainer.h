@@ -96,6 +96,7 @@ void EntityContainerFree(EntityContainer** entities);
 // Params:
 //   entities = Pointer to the EntityContainer.
 // Returns:
+// 
 //	 If the EntityContainer pointer is valid and the Entity was added successfully,
 //		then return true,
 //		else return false.
