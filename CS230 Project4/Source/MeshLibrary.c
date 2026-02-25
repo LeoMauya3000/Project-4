@@ -94,6 +94,7 @@ const Mesh* MeshLibraryBuild(const char* meshName)
 
 
     }
+	return NULL;
 	
 }
 void MeshLibraryFreeAll()
@@ -104,7 +105,7 @@ static const Mesh* MeshLibraryFind(const char* meshName)
 {
 	if (meshName)
 	{
-		for (int i = 0; i <= meshes.meshCount; i++)
+		for (unsigned int i = 0; i <= meshes.meshCount; i++)
 		{
 			if (MeshIsNamed(meshes.meshList[i], meshName))
 			{
