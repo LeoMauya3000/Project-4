@@ -107,9 +107,10 @@ void MeshBuildSpaceship(Mesh* mesh)
 }
 void MeshRender(const Mesh* mesh)
 {
-
-	DGL_Graphics_DrawMesh(mesh->meshResource, mesh->drawMode);
-
+	if (mesh && mesh->meshResource)
+	{
+	  DGL_Graphics_DrawMesh(mesh->meshResource, mesh->drawMode);
+	}
 }
 void MeshFree(Mesh** mesh)
 {
@@ -119,24 +120,27 @@ void MeshFree(Mesh** mesh)
 }
 void MeshRead(Mesh* mesh, Stream stream)
 {
-	Vector2D *position = NULL;
-	DGL_Color* color = NULL;
-	Vector2D* uvOffset = NULL;
+	
+	Vector2D position;
+	DGL_Color color;
+	Vector2D uvOffset;
 	const char* token = StreamReadToken(stream);
 		if (!strncmp(token, "Mesh", _countof("Mesh")))
 		{
-			*mesh->name = *StreamReadToken(stream);
+			const char* name = StreamReadToken(stream);
+			strcpy_s(mesh->name, _countof(mesh->name), name);
 			int verticies = StreamReadInt(stream);
 			DGL_Graphics_StartMesh();
+
 			for (int i = 0; i <= verticies; i++)
 			{
-				 StreamReadVector2D(stream, position);
-				 StreamReadColor(stream, color);
-				 StreamReadVector2D(stream, uvOffset);
-				 DGL_Graphics_AddVertex(position, color, uvOffset);
+				 StreamReadVector2D(stream, &position);
+				 StreamReadColor(stream, &color);
+				 StreamReadVector2D(stream, &uvOffset);
+				 DGL_Graphics_AddVertex(&position, &color, &uvOffset);
 			}
-			mesh = (Mesh*)DGL_Graphics_EndMesh();
-			mesh->drawMode = DGL_DM_POINTLIST;
+			mesh->meshResource = DGL_Graphics_EndMesh();
+			mesh->drawMode = DGL_DM_TRIANGLELIST;
 		}
 }
 bool MeshIsNamed(const Mesh* mesh, const char* name)

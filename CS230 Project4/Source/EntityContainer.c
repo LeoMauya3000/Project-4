@@ -12,7 +12,7 @@
 #include "stdafx.h"
 #include "EntityContainer.h"
 #include "Entity.h"
-
+#define MAXENTITYENTRY 100
 //------------------------------------------------------------------------------
 // Private Constants:
 //------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ typedef struct EntityContainer
 	// or a dynamically sized array, such as a linked list.
 	// (NOTE: The implementation details are left up to the student.  However,
 	//    it is your responsiblity to ensure that memory is handled correctly.)
-	Entity* entities[100];
+	Entity* entities[MAXENTITYENTRY];
 
 } EntityContainer;
 
@@ -80,6 +80,11 @@ EntityContainer* EntityContainerCreate()
 	EntityContainer* returnedEntityContainer = calloc(1, sizeof(EntityContainer));
 	if (returnedEntityContainer)
 	{
+		returnedEntityContainer->entityMax = MAXENTITYENTRY;
+		for (int i = 0; i < MAXENTITYENTRY; i++)
+		{
+			returnedEntityContainer->entities[i] = 0;
+		}
 		return returnedEntityContainer;
 	}
 	
@@ -148,13 +153,21 @@ void EntityContainerUpdateAll(EntityContainer* entities, float dt)
 	{
 		for (unsigned i = 0; i <= entities->entityCount; i++)
 		{
-			EntityUpdate(entities->entities[i], dt);
-			// delete after if marked for deletion updating ?? weird.
+			if (entities->entities[i])
+			{
+			 EntityUpdate(entities->entities[i],dt);
+
+			}
 			if (EntityIsDestroyed(entities->entities[i]))
 			{
-				entities->entityCount--;
+		
 				EntityFree(&entities->entities[i]);
-				entities->entities[i] = 0;
+				for (unsigned int j = i; j < entities->entityCount - 1; j++)
+				{
+					entities->entities[j] = entities->entities[j + 1];
+				}
+				entities->entityCount--;
+				i--;
 			}
 		}
 	}
@@ -165,7 +178,7 @@ void EntityContainerRenderAll(const EntityContainer* entities)
 	{
 		for (unsigned int i = 0; i <= entities->entityCount; i++)
 		{
-			EntityRender(entities->entities[i]);
+			  EntityRender(entities->entities[i]);
 		}
 	}
 }
@@ -173,9 +186,12 @@ void EntityContainerFreeAll(EntityContainer* entities)
 {
 	if (entities)
 	{
-		for (unsigned int i = 0; i <= entities->entityCount; i++)
+		for (unsigned int i = 0; i < MAXENTITYENTRY; i++)
 		{
-			EntityFree(&entities->entities[i]);
+			if (entities->entities[i])
+			{
+				EntityFree(&entities->entities[i]);
+			}
 		}
 	}
 }

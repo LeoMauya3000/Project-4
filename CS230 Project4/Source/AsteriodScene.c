@@ -16,6 +16,11 @@
 #include "AsteriodScene.h"
 #include "DGL.h"
 #include "EntityFactory.h"
+#include "Sprite.h"
+#include "Entity.h"
+#include "Mesh.h"
+#include "BehaviorSpaceship.h"
+#include "BehaviorBullet.h"
 
 //------------------------------------------------------------------------------
 // Private Constants:
@@ -29,6 +34,7 @@ typedef struct AsteriodScene
 {
 	// WARNING: The base class must always be included first.
 	Scene	base;
+	Mesh* spaceShipMesh;
 	Entity* spaceShip;
 
 	// Add any scene-specific variables second.
@@ -85,6 +91,9 @@ const Scene* AsteriodSceneGetInstance(void)
 // Load any resources used by the scene.
 static void AsteriodSceneLoad(void)
 {
+	instance.spaceShipMesh = MeshCreate();
+	MeshBuildSpaceship(instance.spaceShipMesh);
+	
 }
 
 // Initialize the entities and variables used by the scene.
@@ -107,10 +116,10 @@ static void AsteriodSceneUpdate(float dt)
 {
 	// Tell the compiler that the 'dt' variable is unused.
 	UNREFERENCED_PARAMETER(dt);
-
+	
 	// NOTE: This call causes the engine to exit immediately.  Make sure to remove
 	//   it when you are ready to test out a new scene.
-	SceneSystemSetNext(NULL);
+	
 }
 
 // Render any objects associated with the scene.

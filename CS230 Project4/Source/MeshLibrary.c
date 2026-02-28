@@ -14,8 +14,9 @@
 #include "EntityContainer.h"
 #include "Entity.h"
 #include "Mesh.h"
+#include "Stream.h"
 
-
+#define MESHLISTMAX 20
 //------------------------------------------------------------------------------
 // Private Constants:
 //------------------------------------------------------------------------------
@@ -32,7 +33,7 @@ typedef struct MeshLibrary
 	// A list of all currently loaded meshes.
 	// This list can be a fixed-length array (minimum size of 10 entries)
 	// or a dynamically-sized array, such as a linked list.
-	const Mesh* meshList[20];
+	const Mesh* meshList[MESHLISTMAX];
 
 } MeshLibrary;
 //------------------------------------------------------------------------------
@@ -58,7 +59,7 @@ void MeshLibraryInit()
 {
 
 	meshes.meshCount = 0;
-	for (int i = 0; i <= 19; i++)
+	for (unsigned int i = 0; i <  MESHLISTMAX; i++)
 	{
 		meshes.meshList[i] = 0;
 	}
@@ -80,26 +81,47 @@ void MeshLibraryExit()
 }
 const Mesh* MeshLibraryBuild(const char* meshName)
 {
+
 	if (meshName)
 	{
+		
+
 		if (MeshLibraryFind(meshName))
 		{
-
+			const Mesh* ReturnedMesh = MeshCreate();
+			ReturnedMesh = MeshLibraryFind(meshName);
+			return ReturnedMesh;
 		}
-
-
-
-
-
-
-
+		else
+		{
+			char buffer[256];
+			sprintf_s(buffer, sizeof(buffer), "Data/%s.txt", meshName);
+			Stream streamFile = StreamOpen(buffer);
+			if (streamFile)
+			{
+				
+				Mesh* mesh = MeshCreate();
+				MeshRead(mesh, streamFile);
+				MeshLibraryAdd(mesh);
+				StreamClose(&streamFile);
+				return mesh;
+			}
+		}
+	
     }
 	return NULL;
 	
 }
 void MeshLibraryFreeAll()
 {
+	for (int i = 0; i < MESHLISTMAX; i++)
+	{
+		if (meshes.meshList[i])
+		{
+		  MeshFree(&meshes.meshList[i]);
 
+		}
+	}
 }
 static const Mesh* MeshLibraryFind(const char* meshName)
 {
@@ -114,6 +136,23 @@ static const Mesh* MeshLibraryFind(const char* meshName)
 		}
 	}
 	return NULL;
+}
+
+static void MeshLibraryAdd(const Mesh* mesh)
+{
+	if (mesh)
+	{
+		if (meshes.meshCount <  MESHLISTMAX)
+		{
+			meshes.meshList[meshes.meshCount] = mesh;
+			meshes.meshCount++;
+		}
+		else
+		{
+			printf("meshLibrary is full!");
+		}
+		
+	}
 }
 
 //------------------------------------------------------------------------------

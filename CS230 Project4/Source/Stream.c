@@ -131,12 +131,18 @@ void StreamReadColor(Stream stream, DGL_Color* color)
 {
 	if (stream && color)
 	{
-		float red = StreamReadFloat(stream);
-		float green = StreamReadFloat(stream);
-		float blue = StreamReadFloat(stream);
-		float alpha = StreamReadFloat(stream);
-		color = &(DGL_Color) { red, green, blue, alpha };
+		color->r = StreamReadFloat(stream);
+		color->g = StreamReadFloat(stream);
+		color->b = StreamReadFloat(stream);
+		color->a = StreamReadFloat(stream);
+	}
+	else if (color)
+	{
+		color->r = 0;
+		color->g = 0;
+		color->b = 0;
+		color->a = 0;
 	}
 
-	color = &(DGL_Color) { 0, 0, 0, 0 };	
+
 }

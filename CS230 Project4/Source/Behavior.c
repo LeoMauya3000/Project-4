@@ -52,20 +52,19 @@ Behavior* BehaviorClone(Behavior* other)
 		{
 			if (clone)
 			{
-			 clone = other;
+			 *clone = *other;
 		     return clone;
 			}
 		}
-
 	}
 	return NULL;
 }
 void BehaviorFree(Behavior** behavior)
 {
-	if (behavior)
+	if (*behavior)
 	{
-		free(*behavior);
-		behavior = NULL;
+ 		free(*behavior);
+		*behavior = NULL;
 	}
 }
 void BehaviorRead(Behavior* behavior, Stream stream)
@@ -89,25 +88,27 @@ void BehaviorSetParent(Behavior* behavior, Entity* parent)
 }
 void BehaviorUpdate(Behavior* behavior, float dt)
 {
+
 	if (behavior)
 	{
 		if (behavior->stateCurr != behavior->stateNext)
 		{
 			if (behavior->onExit)
 			{
-				behavior->stateCurr = behavior->stateNext;
+				behavior->onExit;
 			}
-
-			behavior->onExit;
+			behavior->stateCurr = behavior->stateNext;
 
 		    if (behavior->onInit)
 			{
 				behavior->onInit(behavior);
 			}
+
 		}
+
 		if (behavior->onUpdate)
 		{
-			behavior->onUpdate(behavior,dt);
+           behavior->onUpdate(behavior, dt);
 		}
 	}
 }

@@ -84,12 +84,12 @@ typedef struct Entity
 
 Entity* EntityCreate(void)
 {
-	
+
 	Entity* entity = calloc(1, sizeof(Entity));
 	if (entity)
 	{
-		
-	   return entity;
+
+		return entity;
 	}
 	else
 	{
@@ -98,18 +98,39 @@ Entity* EntityCreate(void)
 }
 void EntityFree(Entity** entity)
 {
-	free(*entity);
-	*entity = NULL;
+	if (entity)
+	{
+		if ((*entity)->animation)
+		{
+			AnimationFree(&(*entity)->animation);
+		}
+		if ((*entity)->transform)
+		{
+			TransformFree(&(*entity)->transform);
+		}
+		if ((*entity)->sprite)
+		{
+			SpriteFree(&(*entity)->sprite);
+		}
+		if ((*entity)->behavior)
+		{
+			BehaviorFree(&(*entity)->behavior);
+		}
+		if ((*entity)->physics)
+		{
+			PhysicsFree(&(*entity)->physics);
+		}
+	}
+	entity = NULL;
 }
 void EntityRead(Entity* entity, Stream stream)
 {
-	const char* entityName;
 	const char* token = StreamReadToken(stream);
 	EntitySetName(entity, token);
 
 	if (entity && stream)
 	{
-		entityName = StreamReadToken(stream);
+		token = StreamReadToken(stream);
 		while(token)
 		{
 			if (!strncmp(token, "Transform", _countof("Transform")))
@@ -197,8 +218,11 @@ const char* EntityGetName(const Entity* entity)
 }
 Physics* EntityGetPhysics(const Entity* entity)
 {
-	
-	return entity->physics;
+	if (entity)
+	{
+	 return entity->physics;
+	}
+	return NULL;
 }
 Sprite* EntityGetSprite(const Entity* entity)
 {
@@ -212,14 +236,13 @@ Transform* EntityGetTransform(const Entity* entity)
 }
 void EntityUpdate(Entity* entity, float dt)
 {
-
 	if (entity->animation)
 	{
 		AnimationUpdate(entity->animation, dt);
 	}
 	if (entity->behavior)
 	{
-		BehaviorUpdate(entity->behavior, dt);
+		BehaviorUpdate(EntityGetBehavior(entity), dt);
 	}
 
 	if (entity->physics && entity->transform && entity->sprite)
@@ -232,7 +255,10 @@ void EntityRender(Entity* entity)
 {
 	if (entity)
 	{
-		SpriteRender(entity->sprite, entity->transform);
+		if (entity->sprite && entity->transform)
+		{
+		 SpriteRender(entity->sprite, entity->transform);
+		}
 	}
 }
 
@@ -267,11 +293,32 @@ Entity* EntityClone(const Entity* other)
 		if (clonedEntity)
 		{
 			EntitySetName(clonedEntity, other->name);
-			EntityAddTransform(clonedEntity, EntityGetTransform(other));
-			EntityAddPhysics(clonedEntity, EntityGetPhysics(other));
-			EntityAddSprite(clonedEntity, EntityGetSprite(other));
-			EntityAddAnimation(clonedEntity, EntityGetAnimation(other));
-			EntityAddBehavior(clonedEntity, EntityGetBehavior(other));
+			if (EntityGetTransform(other))
+			{
+				Transform* clonedTransform = TransformClone(other->transform);
+				EntityAddTransform(clonedEntity, clonedTransform);
+			}
+			if (EntityGetPhysics(other))
+			{
+				Physics* clonedPhysics = PhysicsClone(other->physics);
+				EntityAddPhysics(clonedEntity, clonedPhysics);
+			}
+			if (EntityGetSprite(other))
+			{
+				Sprite* clonedSprite = SpriteClone(other->sprite);
+				EntityAddSprite(clonedEntity, clonedSprite);
+			}
+			if (EntityGetAnimation(other))
+			{
+				Animation* animation = AnimationClone(other->animation);
+				EntityAddAnimation(clonedEntity, animation);
+			}
+			if (EntityGetBehavior(other))
+			{
+				Behavior* behvaior = BehaviorClone(other->behavior);
+				EntityAddBehavior(clonedEntity, behvaior);
+			}
+
 			return clonedEntity;
 		}
 	}
@@ -281,7 +328,7 @@ void EntityDestroy(Entity* entity)
 {
 	if (entity)
 	{
-		entity->isDestroyed = true;
+ 		entity->isDestroyed = true;
 	}
 }
 bool EntityIsDestroyed(const Entity* entity)
@@ -303,15 +350,20 @@ void EntityAddBehavior(Entity* entity, Behavior* behavior)
 {
 	if (entity && behavior)
 	{
+		BehaviorSetParent(behavior, entity);
 		entity->behavior = behavior;
 	}
 }
 bool EntityIsNamed(const Entity* entity, const char* name)
 {
-	if (strcmp(entity->name, name) == 0)
+	if (entity && name)
 	{
-		return true;
+		if (strcmp(entity->name, name) == 0)
+		{
+			return true;
+		}
 	}
+	
 	return false;
 }
 //absolutely change this 

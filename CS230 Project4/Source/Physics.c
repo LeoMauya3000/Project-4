@@ -145,7 +145,7 @@ void PhysicsUpdate(Physics* physics, Transform* transform, float dt)
 	if (physics != NULL && transform != NULL)
 	{
 
-	    float rotationVelocity = PhysicsGetRotationalVelocity(physics) * dt;
+	    float rotationVelocity = PhysicsGetRotationalVelocity(physics);
 		float transformRotaion = TransformGetRotation(transform);
 		const Vector2D* translationPtr = TransformGetTranslation(transform);
 		Vector2D translation = *translationPtr;
@@ -167,12 +167,9 @@ Physics* PhysicsClone(const Physics* other)
 		Physics* clonePhyscics = calloc(1, sizeof(Physics));
 		if (clonePhyscics)
 		{
-			clonePhyscics->acceleration = other->acceleration;
-			clonePhyscics->oldTranslation = other->oldTranslation;
-			clonePhyscics->velocity = other->velocity;
+			*clonePhyscics = *other;
+			return clonePhyscics;
 		}
-
-
 	}
 	return NULL;
 }

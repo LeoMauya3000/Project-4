@@ -97,10 +97,10 @@ Transform* TransformCreate(void)
 void TransformFree(Transform** transform)
 {
 	// Verify that a valid transform was specified.
-	if (transform)
+	if (*transform)
 	{
 		// Free the allocated memory.
-		free(*transform);
+              		free(*transform);
 
 		// Set the Transform pointer to NULL.
 		*transform = NULL;
@@ -242,7 +242,7 @@ const Matrix2D* TransformGetMatrix(Transform* transform)
 			Matrix2DScale(&scaleMatrix,transform->scale.x,transform->scale.y);
 			Matrix2DRotRad(&rotaionMatrix, transform->rotation);
 			Matrix2DTranslate(&translationMatrix, transform->translation.x, transform->translation.y);
-			Matrix2DConcat(&result1,&scaleMatrix,&rotaionMatrix);
+			Matrix2DConcat(&result1, &rotaionMatrix,&scaleMatrix);
 			Matrix2DConcat(&transform->matrix, &translationMatrix, &result1);
 		
 			/*

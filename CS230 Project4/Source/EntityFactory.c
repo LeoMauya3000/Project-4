@@ -43,16 +43,11 @@ static EntityContainer* archetypes = NULL;
 Entity* EntityFactoryBuild(const char* filename)
 {
 	Entity* entity = NULL;
-	Stream streamFile = NULL;
+	Stream streamFile;
 	const char* token = NULL;
 
 	if (filename)
-	{	
-
-			if (filename)
-			{
-				return NULL;
-			}
+	{
 			if ( archetypes == NULL)
 			{
 				archetypes = EntityContainerCreate();
@@ -67,7 +62,7 @@ Entity* EntityFactoryBuild(const char* filename)
 			{
 				char pathName[FILENAME_MAX] = "";
 				sprintf_s(pathName, _countof(pathName), "Data/%s.txt", filename);
-				streamFile = StreamOpen(filename);
+				streamFile = StreamOpen(pathName);
 				if (streamFile)
 				{
 					token = StreamReadToken(streamFile);

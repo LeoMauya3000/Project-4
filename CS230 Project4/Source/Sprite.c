@@ -18,6 +18,7 @@
 #include "Transform.h"
 #include "Trace.h"
 #include "Matrix2D.h"
+#include "MeshLibrary.h"
 #include <math.h>
 //------------------------------------------------------------------------------
 // Private Constants:
@@ -78,16 +79,22 @@ Sprite* SpriteCreate(void)
 
 void SpriteFree(Sprite** sprite)
 {
-	if (sprite)
+	if (*sprite)
 	{
 		free(*sprite);
 		*sprite = NULL;
 	}
+	return;
 }
 void SpriteRead(Sprite* sprite, Stream stream)
 {
+	const Mesh* meshLibrary = NULL;
 	sprite->frameIndex = StreamReadInt(stream);
 	sprite->alpha = StreamReadFloat(stream);
+	const char * token = StreamReadToken(stream);
+	meshLibrary = MeshLibraryBuild(token);
+	SpriteSetMesh(sprite,meshLibrary);
+	
 }
 void SpriteRender(const Sprite* sprite, Transform* transform)
 {
@@ -135,7 +142,6 @@ void SpriteRender(const Sprite* sprite, Transform* transform)
 	
 		}
 	}
-
 }
 float SpriteGetAlpha(const Sprite* sprite)
 {
@@ -190,5 +196,23 @@ void SpriteSetText(Sprite* sprite, const char* text)
 	{
 		sprite->text = text;
      }
+}
+
+Sprite* SpriteClone(const Sprite* other)
+{
+	if (other)
+	{
+		Sprite *clonedSprite = calloc(1, sizeof(Sprite));
+		if (clonedSprite)
+		{
+			clonedSprite->alpha = other->alpha;
+			clonedSprite->frameIndex = other->frameIndex;
+			clonedSprite->mesh = other->mesh;
+			clonedSprite->spriteSource = other->spriteSource;
+			clonedSprite->text = other->text;
+			return clonedSprite;
+		}
+	}
+	return NULL;
 }
 
